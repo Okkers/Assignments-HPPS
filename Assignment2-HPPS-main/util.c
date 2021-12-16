@@ -24,7 +24,7 @@ int insert_if_closer(int k, int d,
     for (int i = 0; i < k; i++){
         if (closest[i] == -1){
             closest[i] = candidate;
-            for (int j=i-1; j+1 >= 0; j--){
+            for (int j=i-1; j+1 > 0; j--){
                 double canddist = distance(d, &points[i*d], query);
                 double prevdist = distance(d, &points[j*d], query);
                 if (canddist < prevdist){

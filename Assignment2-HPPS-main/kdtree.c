@@ -27,7 +27,7 @@ struct compinfo {
 };
 
 int comparison (const int *a, const int *b, struct compinfo *arg) {
-  const double* apoint = &arg[0].points[*a*arg[0].d+ arg[0].axis];
+  const double* apoint = &arg[0].points[*a*arg[0].d + arg[0].axis];
   const double* bpoint = &arg[0].points[*b*arg[0].d+ arg[0].axis];
 
   if (apoint > bpoint) {
@@ -51,45 +51,25 @@ struct node* kdtree_create_node(int d, const double *points,
   info->axis= depth % d;
   info->points = points;
 
-  hpps_quicksort(points, n, d, comparison, info);
+  hpps_quicksort(&points, n, d, comparison, info);
+  
+  int median = floor(n/2);
 
   newnode->axis = depth % d;
-  newnode->point_index = n/2;
+  newnode->point_index = median;
 
-  int pointsleft = floor(n/2);
-  int pointsright = floor(n/2) + 1;
+  int *leftpoints = points;
+  int *rightpoints = points+median;
+  int *leftindexes = indexes;
+  int *rightindexes = indexes+median;
 
-  if ((n % 2) == 0) {
-    pointsright = pointsright - 1;
+  if (median != 0) {
+    newnode->left = kdtree_create_node(d, leftpoints, depth+1, median, leftindexes);
+    newnode->right = kdtree_create_node(d, rightpoints, depth+1, ceil(n/2), rightindexes);
   }
-
-  int *leftpoints = malloc(pointsleft*sizeof(int)*d);
-  int *leftindexes = malloc(sizeof(int) * pointsleft);
-  int *rightindexes = malloc(sizeof(int) * pointsright);
-
-  int i;
-  for (i = 0; i < pointsleft; i++) {
-      leftpoints[i] = i*d;
-      leftindexes[i] = i;
-      rightindexes[i] = i + pointsleft;
-  }
-
-  int *rightpoints = malloc(pointsright*sizeof(int)*d);
-  int j;
-  for (j = pointsleft ; j > pointsright; j++) {
-    rightpoints[j] = j*d;
-
-  }
-
-  if (rightpoints > 0) {
-    newnode->right = kdtree_create_node(d, rightpoints, depth+1, pointsright, rightindexes);
-    if (pointsleft > 0) {
-       newnode->left = kdtree_create_node(d, leftpoints, depth+1, pointsleft, leftindexes);
-    }
-  }
-  else {
-    return newnode;
-  }
+  
+  return newnode;
+  
 }
 
 struct kdtree *kdtree_create(int d, int n, const double *points) {
@@ -133,12 +113,10 @@ void kdtree_knn_node(const struct kdtree *tree, int k, const double* query,
     return;
   }
   if (closest[k-1] == -1) {
-    while (notfound) {
-      for (int i = 0; i < k; i++) {
-        if (closest[i] == -1) {
-          notfound = false;
-          closest[i] = node[0].point_index;
-        }
+    for (int i = 0; i < k; i++) {
+      if (closest[i] == -1) {
+        closest[i] = node[0].point_index;
+        return;
       }
     }
   }
@@ -150,14 +128,15 @@ void kdtree_knn_node(const struct kdtree *tree, int k, const double* query,
 
   double diff = tree[0].points[node[0].point_index*tree[0].d + node[0].axis] - query[node[0].axis];
 
-  int maxclosest = argmax(k, tree[0].d, tree[0].points, closest, query);
+  // int maxclosest = argmax(k, tree[0].d, tree[0].points, closest, query);
+  int maxclosest = &(tree[0].points)[closest[k-1]*tree[0].d];
+  
+  // double* closestpoint = malloc(tree[0].d * sizeof(double));
+  // for (int p=0; p<tree[0].d; p++) {
+  //   closestpoint[p] = tree[0].points[closest[maxclosest] + p];
+  // }
 
-  double* closestpoint = malloc(tree[0].d * sizeof(double));
-  for (int p=0; p<tree[0].d; p++) {
-    closestpoint[p] = tree[0].points[closest[maxclosest] + p];
-  }
-
-  double radius2 = distance(tree[0].d, closestpoint, query);
+  double radius = distance(tree[0].d, maxclosest, query);
 
   double absdiff = diff;
 
@@ -165,11 +144,11 @@ void kdtree_knn_node(const struct kdtree *tree, int k, const double* query,
     absdiff = -1*diff;
   }
 
-  if ((diff >= 0) || (radius2 > absdiff)) {
-    kdtree_knn_node(tree, k, query, closest, &radius2, node[0].left);
+  if ((diff >= 0) || (*radius > absdiff)) {
+    kdtree_knn_node(tree, k, query, closest, &radius, node[0].left);
   }
-  if ((diff <= 0) || (radius2 > absdiff)) {
-    kdtree_knn_node(tree, k, query, closest, &radius2, node[0].right);
+  if ((diff <= 0) || (*radius > absdiff)) {
+    kdtree_knn_node(tree, k, query, closest, &radius, node[0].right);
   }
 }
 

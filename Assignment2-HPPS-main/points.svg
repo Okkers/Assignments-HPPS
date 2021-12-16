@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="1000" viewBox="0 0 1000 1000">
 <rect x="0" y="0" width="1000" height="1000" fill= "#ffffff" stroke="black" stroke-width="1" />
-<circle cx="775.011995" cy="626.596120" r="2.000000" fill="black" />
-<circle cx="200.981220" cy="891.362160" r="2.000000" fill="black" />
-<circle cx="123.821910" cy="74.842424" r="2.000000" fill="black" />
-<circle cx="876.622971" cy="402.275107" r="2.000000" fill="black" />
-<circle cx="37.724306" cy="32.416973" r="2.000000" fill="black" />
-<circle cx="832.062059" cy="467.025678" r="2.000000" fill="black" />
-<circle cx="300.576140" cy="783.190236" r="2.000000" fill="black" />
-<circle cx="78.301930" cy="20.535917" r="2.000000" fill="black" />
-<circle cx="147.157538" cy="276.745957" r="2.000000" fill="black" />
-<circle cx="269.306884" cy="240.796144" r="2.000000" fill="black" />
-<circle cx="763.961161" cy="895.239261" r="4.000000" fill="#736813" />
-<circle cx="763.961161" cy="895.239261" r="820.352759" stroke="#736813" stroke-width="1.000000" fill-opacity="0" />
+<circle cx="794.210079" cy="288.790435" r="2.000000" fill="black" />
+<circle cx="700.836564" cy="960.135768" r="2.000000" fill="black" />
+<circle cx="1.855282" cy="181.726487" r="2.000000" fill="black" />
+<circle cx="277.066545" cy="657.425585" r="2.000000" fill="black" />
+<circle cx="351.807824" cy="834.090716" r="2.000000" fill="black" />
+<circle cx="562.658142" cy="595.386361" r="2.000000" fill="black" />
+<circle cx="658.570154" cy="588.577360" r="2.000000" fill="black" />
+<circle cx="219.692694" cy="375.110168" r="2.000000" fill="black" />
+<circle cx="476.596680" cy="160.396733" r="2.000000" fill="black" />
+<circle cx="787.898186" cy="204.804777" r="2.000000" fill="black" />
+<circle cx="794.382259" cy="182.621774" r="4.000000" fill="#64646d" />
+<circle cx="794.382259" cy="182.621774" r="783.121196" stroke="#64646d" stroke-width="1.000000" fill-opacity="0" />
 </svg>
