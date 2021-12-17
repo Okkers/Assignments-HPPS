@@ -4,6 +4,8 @@
 #include <assert.h>
 #include<stdio.h>
 
+
+
 int* knn(int k, int d, int n, const double *points, const double* query) {
     int *k_array = malloc(k*sizeof(int));
     for (int i = 0; i < k; i++) {
@@ -11,7 +13,7 @@ int* knn(int k, int d, int n, const double *points, const double* query) {
     }
 
     for (int i = 0; i < n; i++){
-        // printf("%d\n", i);
+        // printf("Interation: %d\n", i);
         insert_if_closer(k, d, points, k_array, query, i);
     }
     // free(k_array);
@@ -19,7 +21,4 @@ int* knn(int k, int d, int n, const double *points, const double* query) {
     free(k_array);
 }
 
-// int* main(const double *points, const double* query) {
-//     int* myk = knn(3, 2, 10, points, query);
-//     return myk
-// }
+

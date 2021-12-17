@@ -5,8 +5,16 @@
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
+#include<time.h>
+
+
 
 int main(int argc, char** argv) {
+  clock_t start, end;
+  double cpu_time_used;
+
+  start = clock();
+
   if (argc != 4 && argc != 5) {
     fprintf(stderr, "Usage: %s <points> <queries> <k> [output-file]\n", argv[0]);
     exit(1);
@@ -76,5 +84,8 @@ int main(int argc, char** argv) {
   free(points);
   free(queries);
 
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("fun() took %f seconds to execute \n", cpu_time_used);
   return 0;
 }
