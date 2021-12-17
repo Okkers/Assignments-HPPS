@@ -11,7 +11,7 @@ int* knn(int k, int d, int n, const double *points, const double* query) {
     }
 
     for (int i = 0; i < n; i++){
-        // printf("%d\n", i);
+        // printf("Interation: %d\n", i);
         insert_if_closer(k, d, points, k_array, query, i);
     }
     // free(k_array);

@@ -5,9 +5,8 @@
 #include <stdlib.h>
 
 double distance(int d, const double *x, const double *y) {
-    int i;
     double sum = 0.0;
-    for (i = 0; i < d; i++) {
+    for (int i = 0; i < d; i++) {
         // printf("x: %f, y: %f\n", x[i],y[i]);
         // printf("x-y: %f\n", (x[i]-y[i]));
         // printf("pow(x-y): %f\n", (pow((x[i]-y[i]), 2)));
@@ -24,104 +23,62 @@ int insert_if_closer(int k, int d,
     for (int i = 0; i < k; i++){
         if (closest[i] == -1){
             closest[i] = candidate;
-            for (int j=i-1; j+1 > 0; j--){
-                double canddist = distance(d, &points[i*d], query);
-                double prevdist = distance(d, &points[j*d], query);
+            if (i==0){
+                return 1;
+            }
+            for (int j=i; j > 0; j--){
+                // printf("First loop: %d\n", j);
+                double canddist = distance(d, &points[closest[j]*d], query);
+                // printf("  canddist: %f\n", canddist);
+                double prevdist = distance(d, &points[(closest[j]-1)*d], query);
+                // printf("  prevdist: %f\n", prevdist);
                 if (canddist < prevdist){
-                    double save = closest[i];
-                    closest[i] = closest[j];
-                    closest[j] = save;
-                }
-                else{
-                    return 1;
+                    double save = closest[j];
+                    closest[j] = closest[(j-1)];
+                    closest[(j-1)] = save;
+                    // printf("  Closestlist: %d, %d, %d\n", closest[0], closest[1], closest[2]);
                 }
             }
-            
+            // printf("  Closestlist: %d, %d, %d\n", closest[0], closest[1], closest[2]);
             return 1;
         }
     }
-    // printf("For canddist\n");
+    // printf("No Loop\n");
     double canddist = distance(d, &points[candidate*d], query);
-    // printf("Canddist: %f\n", canddist);
+    // printf("  Canddist: %f\n", canddist);
 
     // printf("For closemax\n");
     double closemax = distance(d, &points[closest[k-1]*d], query); 
-    double closemin = distance(d, &points[closest[0]], query); 
+    double closemin = distance(d, &points[closest[0]*d], query); 
+    // printf("  closemax: %f\n", closemax);
+    // printf("  closemin: %f\n", closemin);
     if (canddist < closemin){
         for (int i = k-1; i > 0; i--){
             closest[i] = closest[i - 1];
         }
         closest[0] = candidate;
+        // printf("  Closestlist: %d, %d, %d\n", closest[0], closest[1], closest[2]);
         return 1;
     }
     // printf("Closemax: %f\n", closemax);
     if (canddist < closemax){
         for (int j = k-2; j>=0; j--){
-            // printf("%d", j);
+            // printf("LOOP: %d\n", j);
             double closedist = distance(d, &points[closest[j]*d], query);
+            // printf("  closedist %f\n", closedist);
             if (canddist > closedist){
-                // printf("%f", canddist);
-                for (int i = k-1; i < j; i--)
+                for (int i = k-1; i > j+1; i--)
                     closest[i] = closest[i - 1];
                 closest[j+1] = candidate;
+
+                // printf("  Closestlist: %d, %d, %d\n", closest[0], closest[1], closest[2]);
                 return 1;
             }
         }
-        
     }
-
-    return 0;
-    
+    return 0; 
 }
 
-// int main() {
-//     double eudist;
-//     int d = 2;
-//     double* x = malloc(d * sizeof(double));
-//     x[0] = 2.0;
-//     x[1] = 2.0;
-//     double* y = malloc(d * sizeof(double));
-//     y[0] = 1.0;
-//     y[1] = 1.0;
-//     eudist = distance(d, x, y);
-//     printf("%f", eudist);
-// }
-
-// int main(int argc, char** argv){
-//     FILE * points_f = fopen(argv[1], "r");
-//     assert(points_f != NULL);
-//     FILE * queries_f = fopen(argv[2], "r");
-//     assert(queries_f != NULL);
-
-//     int n_points = -1;
-//     int d;
-//     double* points = read_points(points_f, &n_points, &d);
-//     if (points == NULL) {
-//         fprintf(stderr, "Failed reading data from %s\n", argv[1]);
-//         exit(1);
-//     }
-//     fclose(points_f);
-
-//     int i;
-//     int *closest = malloc(3*sizeof(double));
-//     for (i=0; i<3; i++) {
-//         closest[i] = i;
-//     }
-
-
-//     int n_queries = -1;
-//     int d_queries;
-//     double* queries = read_points(queries_f, &n_queries, &d_queries);
-//     if (queries == NULL) {
-//         fprintf(stderr, "Failed reading data from %s\n", argv[2]);
-//         exit(1);
-//     }
-//     fclose(queries_f);
-
-//     int result;
-
-//     result = insert_if_closer(3, 2, points, closest, queries, 1);
-// }
 
 
 
